@@ -13,6 +13,7 @@ package tmpl
 import (
 	"bytes"
 	"fmt"
+	"html"
 	"regexp"
 	"strings"
 
@@ -73,6 +74,7 @@ func sanitizeItemForTable(s string, settings *print.Settings) string {
 			return segment
 		},
 		func(segment string) string {
+			segment = html.EscapeString(segment)
 			segment = strings.TrimSpace(segment)
 			segment = strings.Replace(segment, "\n", "<br>", -1)
 			segment = strings.Replace(segment, "\r", "", -1)

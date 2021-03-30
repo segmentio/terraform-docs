@@ -199,6 +199,7 @@ type output struct {
 	File     string `mapstructure:"file"`
 	Mode     string `mapstructure:"mode"`
 	Template string `mapstructure:"template"`
+	Check    bool
 
 	beginComment string
 	endComment   string
@@ -209,6 +210,7 @@ func defaultOutput() output {
 		File:     "",
 		Mode:     outputModeInject,
 		Template: OutputTemplate,
+		Check:    false,
 
 		beginComment: outputBeginComment,
 		endComment:   outputEndComment,

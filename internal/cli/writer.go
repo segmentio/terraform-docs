@@ -46,6 +46,8 @@ type fileWriter struct {
 
 	mode string
 
+	check bool
+
 	template string
 	begin    string
 	end      string
@@ -157,5 +159,26 @@ func (fw *fileWriter) write(filename string, p []byte) (int, error) {
 	if fw.writer != nil {
 		return fw.writer.Write(p)
 	}
-	return len(p), os.WriteFile(filename, p, 0644)
+
+	f, err := os.ReadFile(filename)
+	if err != nil {
+		return 0, err
+	}
+
+	// check for changes and print changed file
+	if !bytes.Equal(f, p) {
+		_, err := os.Stdout.Write([]byte(fw.file + "\n"))
+		if err != nil {
+			return 0, err
+		}
+
+		// if run in check mode return exit 1
+		if fw.check {
+			os.Exit(1)
+		}
+
+		return len(p), os.WriteFile(filename, p, 0644)
+	}
+
+	return 0, nil
 }
